@@ -61,22 +61,14 @@ export default class Search extends Component {
     this.setState({ loading: false })
     mixpanel.track('User searched for: ' + this.state.value)
     axios.get('https://api.govote.org.ng/search?query=' + this.state.value + '&key=k9ihbvse57fvsujbsvsi5362WE$NFD2')
-      .then(res => {
-<<<<<<< HEAD
-				// this.setState({...this.state,loading: true })
-        this.setState({ loading: true, locations: res.data.data, result: true   });
-        // this.setState({ locations: res.data.data });
-        // this.setState({ result: true });
-        route(`${this.props.path}?query=${this.state.value}`);
-=======
+      			.then(res => {
         this.setState({ loading: true })
         this.setState({ locations: res.data.data })
         this.setState({ result: true })
         route(`${this.props.path}?query=${this.state.value}`)
->>>>>>> 1765ee2b0a37c55d8ccb6fac833a76862720b4d2
       })
       .catch(err => {
-        console.error(err)
+       console.error(err)
       })
     event.preventDefault()
   }
@@ -106,7 +98,6 @@ export default class Search extends Component {
     this.showDisqus = this.showDisqus.bind(this)
     this.closeDisqus = this.closeDisqus.bind(this)
   }
-<<<<<<< HEAD
   componentDidMount () {
     let { query } = this.props.matches;
 		query = !query ? ' ' : query;
@@ -148,19 +139,6 @@ export default class Search extends Component {
 				// 	sessionStorage.removeItem(element.name, x);
 				// });
 			})
-=======
-
-  componentWillMount () {
-    let { query } = this.props.matches
-    query = !query ? ' ' : query
-    axios.get('https://api.govote.org.ng/search?query=' + query + '&key=k9ihbvse57fvsujbsvsi5362WE$NFD2')
-      .then(res => {
-        console.log(res.data)
-        this.setState({ value: query })
-        this.setState({ loading: true })
-        this.setState({ locations: res.data.data })
-      })
->>>>>>> 1765ee2b0a37c55d8ccb6fac833a76862720b4d2
       .catch(err => {
         console.error(err)
       })
