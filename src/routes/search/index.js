@@ -87,9 +87,10 @@ export default class Search extends Component {
     mixpanel.track('User searched for: ' + this.state.value);
     axios.get('https://api.govote.org.ng/search?query=' + this.state.value + '&key=k9ihbvse57fvsujbsvsi5362WE$NFD2')
       .then(res => {
-        this.setState({ loading: true });
-        this.setState({ locations: res.data.data });
-        this.setState({ result: true });
+				// this.setState({...this.state,loading: true })
+        this.setState({ loading: true, locations: res.data.data, result: true   });
+        // this.setState({ locations: res.data.data });
+        // this.setState({ result: true });
         route(`${this.props.path}?query=${this.state.value}`);
       })
       .catch(err => {
@@ -100,16 +101,47 @@ export default class Search extends Component {
   loadMore () {
     console.log(this.state.currentPage);
   }
-  componentWillMount () {
+  componentDidMount () {
     let { query } = this.props.matches;
-    query = !query ? ' ' : query;
-    axios.get('https://api.govote.org.ng/search?query=' + query + '&key=k9ihbvse57fvsujbsvsi5362WE$NFD2')
+		query = !query ? ' ' : query;
+
+		axios.get('https://api.govote.org.ng/search?query=' + query + '&key=k9ihbvse57fvsujbsvsi5362WE$NFD2')
+
       .then(res => {
-        console.log(res.data);
+				// console.log(res.data);
+
         this.setState({ value: query });
         this.setState({ loading: true });
-        this.setState({ locations: res.data.data });
-      })
+				this.setState({ locations: res.data.data });
+				return res.data.data;
+			})
+			.then(l =>{
+				console.log(l)
+				const x = [
+					{
+						name: "daddy",
+						class: 3,
+						friend: 'james'
+					},
+					{
+						name: "mummy",
+						class: 3,
+						friend: 'john'
+					},
+					{
+						name: "rabbit",
+						class: 3,
+						friend: 'yakubu'
+					}
+				]
+				x.forEach((x)=>{
+					sessionStorage.setItem(x.name, JSON.stringify(x))
+				})
+				// l.forEach(function(element) {
+				// 	console.log(element.name);
+				// 	sessionStorage.removeItem(element.name, x);
+				// });
+			})
       .catch(err => {
         console.error(err);
       });
