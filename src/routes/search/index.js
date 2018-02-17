@@ -103,55 +103,41 @@ export default class Search extends Component {
 		this.showDisqus = this.showDisqus.bind(this);
 		this.closeDisqus = this.closeDisqus.bind(this);
 	}
-	componentDidMount() {
+	componentWillMount() {
 		let { query } = this.props.matches;
 		query = !query ? " " : query;
-
-		axios
-			.get(
-				"https://api.govote.org.ng/search?query=" +
-					query +
-					"&key=k9ihbvse57fvsujbsvsi5362WE$NFD2"
-			)
-
-			.then(res => {
-				// console.log(res.data);
-
-				this.setState({ value: query });
-				this.setState({ loading: true });
-				this.setState({ locations: res.data.data });
-				return res.data.data;
-			})
-			.then(l => {
-				console.log(l);
-				const x = [
-					{
-						name: "daddy",
-						class: 3,
-						friend: "james"
-					},
-					{
-						name: "mummy",
-						class: 3,
-						friend: "john"
-					},
-					{
-						name: "rabbit",
-						class: 3,
-						friend: "yakubu"
-					}
-				];
-				x.forEach(x => {
-					sessionStorage.setItem(x.name, JSON.stringify(x));
-				});
-				// l.forEach(function(element) {
-				// 	console.log(element.name);
-				// 	sessionStorage.removeItem(element.name, x);
-				// });
-			})
-			.catch(err => {
-				console.error(err);
+		const sessionStorageRef = JSON.parse(
+			sessionStorage.getItem(`PVCLocations`)
+		);
+		// check if session storage already exists, if not make a get request to the API
+		if (sessionStorageRef) {
+			this.setState({
+				value: query,
+				loading: true,
+				locations: sessionStorageRef
 			});
+		} else {
+			axios
+				.get(
+					"https://api.govote.org.ng/search?query=" +
+						query +
+						"&key=k9ihbvse57fvsujbsvsi5362WE$NFD2"
+				)
+				.then(res => {
+					this.setState({
+						value: query,
+						loading: true,
+						locations: res.data.data
+					});
+					return res.data.data;
+				})
+				.then(PCVLocations => {
+					sessionStorage.setItem(`PVCLocations`, JSON.stringify(PCVLocations));
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		}
 	}
 
 	render() {
@@ -512,8 +498,8 @@ export default class Search extends Component {
 					animation="fade"
 					visible={this.state.visible}
 					onClose={this.hide}
-					showCloseButton
-					closeOnEsc
+					showCloseButton={true}
+					closeOnEsc={true}
 				>
 					{this.state.currentLocation !== null && (
 						<div>
@@ -635,8 +621,8 @@ export default class Search extends Component {
 					animation="fade"
 					visible={this.state.visibledelete}
 					onClose={this.hidedeletion}
-					showCloseButton
-					closeOnEsc
+					showCloseButton={true}
+					closeOnEsc={true}
 				>
 					{this.state.currentLocation !== null && (
 						<div>
@@ -754,8 +740,8 @@ export default class Search extends Component {
 					animation="fade"
 					visible={this.state.visiblesuggest}
 					onClose={this.hidesuggest}
-					showCloseButton
-					closeOnEsc
+					showCloseButton={true}
+					closeOnEsc={true}
 				>
 					<div>
 						<div className={style.modal__header}>
